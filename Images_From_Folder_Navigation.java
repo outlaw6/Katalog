@@ -1,10 +1,13 @@
 import java.awt.Image;
 import java.io.File;
 import javax.swing.ImageIcon;
+import java.io.*;
+import javax.swing.*;
+//import javax.swing.*;
 
 /**
  *
- * @author 1bestcsharp.blogspot.com
+ * @author rNd Lab's MMXVI 
  */
 public class Images_From_Folder_Navigation extends javax.swing.JFrame {
 
@@ -14,7 +17,7 @@ public class Images_From_Folder_Navigation extends javax.swing.JFrame {
     public Images_From_Folder_Navigation() {
         initComponents();
        // display first image
-        showImage(pos);
+       // showImage(pos);
     }
     
 // the index of the images
@@ -23,7 +26,8 @@ public class Images_From_Folder_Navigation extends javax.swing.JFrame {
 // get images list
     public String[] getImages()
     {
-        File file = new File(getClass().getResource("/JAVA_VIDEOS_TUTORIALS/Images").getFile());
+        //File file = new File( getClass().getResource("/Katalog/slike").getFile()   );
+        File file = new File("/home/rnd/Documents/slike");
         String[] imagesList = file.list();
         return imagesList;
     }
@@ -33,9 +37,66 @@ public class Images_From_Folder_Navigation extends javax.swing.JFrame {
     {
         String[] imagesList = getImages();
         String imageName = imagesList[index];
-        ImageIcon icon = new ImageIcon(getClass().getResource("/JAVA_VIDEOS_TUTORIALS/Images/"+imageName));
+        //ImageIcon icon = new ImageIcon(getClass().getResource("/slike/"+imageName));
+        ImageIcon icon = new ImageIcon("/home/rnd/Documents/slike/" + imageName);
         Image image = icon.getImage().getScaledInstance(jLabel_Image.getWidth(), jLabel_Image.getHeight(), Image.SCALE_SMOOTH);
         jLabel_Image.setIcon(new ImageIcon(image));
+       /**
+        * Ovdje pocinje citanje FILE-a i setovanje LABEL-a
+        */
+        
+        
+        System.out.println(imageName);
+        
+      
+        
+
+        String fajl  = "/home/rnd/Documents/slike/" + imageName.substring(0, imageName.length() - 4 ) + ".txt";
+        System.out.println(fajl);
+
+        // This will reference one line at a time
+        String line = null;
+        
+
+        try {
+            // FileReader reads text files in the default encoding.
+            FileReader fileReader = 
+                new FileReader(fajl);
+
+            // Always wrap FileReader in BufferedReader.
+            BufferedReader bufferedReader = 
+                new BufferedReader(fileReader);
+
+           /* while((line = bufferedReader.readLine()) != null) {
+                //System.out.println(line);
+                line += bufferedReader.readLine();
+            }   */
+            line = bufferedReader.readLine();
+            System.out.println(line);
+            String parts[] = line.split(" ");
+            System.out.println(parts[0]);
+            System.out.println(parts[1]);
+            System.out.println(parts[2]);
+            jLabel_Sifra_sifra.setText(parts[0]);
+            jLabel_Cijena_cijena.setText(parts[1]);
+            jLabel_Naziv_naziv.setText(parts[2]);
+            // Always close files.
+            bufferedReader.close();         
+        }
+        catch(FileNotFoundException ex) {
+            System.out.println(
+                "Ne mogu da otvorim fajl '" + 
+                imageName.substring(0, imageName.length() - 4 ) + "'");                
+        }
+        catch(IOException ex) {
+            System.out.println(
+                "Greska prilikom citanja '" 
+                + imageName.substring(0, imageName.length() - 4 ) + "'");                  
+            // Or we could just do this: 
+            // ex.printStackTrace();
+        }
+    
+        
     }
     
     
@@ -49,16 +110,74 @@ public class Images_From_Folder_Navigation extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel_Image = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton(new javax.swing.ImageIcon("/pocetak.ico"));
         jButton_Next = new javax.swing.JButton();
         jButton_Previous = new javax.swing.JButton();
         jButton_Last = new javax.swing.JButton();
+        
+        
+        jLabel_Sifra = new javax.swing.JLabel("SIFRA: "); // Tekst sifre
+        jLabel_Sifra.setFont(new java.awt.Font("Serif", java.awt.Font.BOLD, 14));
+        
+        jLabel_Cijena = new javax.swing.JLabel("CIJENA: ");
+        jLabel_Cijena.setFont(new java.awt.Font("Serif", java.awt.Font.BOLD, 14));
+        
+        jLabel_Naziv = new javax.swing.JLabel("NAZIV: ");
+        jLabel_Naziv.setFont(new java.awt.Font("Serif", java.awt.Font.BOLD, 14));
+        
+        jLabel_Naziv_naziv = new javax.swing.JLabel("null");
+        jLabel_Naziv_naziv.setFont(new java.awt.Font("Serif", java.awt.Font.BOLD, 18));
+        jLabel_Naziv_naziv.setForeground(java.awt.Color.red);
+        
+        jLabel_Sifra_sifra = new javax.swing.JLabel("null");
+        jLabel_Sifra_sifra.setFont(new java.awt.Font("Serif", java.awt.Font.BOLD, 18));
+        jLabel_Sifra_sifra.setForeground(java.awt.Color.red);
+        
+        jLabel_Cijena_cijena = new javax.swing.JLabel("null");
+        jLabel_Cijena_cijena.setFont(new java.awt.Font("Serif", java.awt.Font.BOLD, 18));
+        jLabel_Cijena_cijena.setForeground(java.awt.Color.red);
+        
+        jLabel_dodaj_komada  = new javax.swing.JLabel("komada");
+        jLabel_dodaj_komada.setFont(new java.awt.Font("Serif", java.awt.Font.BOLD, 12));
+        
+        
+        trazi_sifru = new JTextField();
+        trazi_sifru.setColumns(1);
+        
+        dodaj_u_fakturu = new JTextField();
+        dodaj_u_fakturu.setColumns(1);
+        
+        
+        
+        jButton_Dodaj  = new javax.swing.JButton();
+        jButton_Dodaj.setFont(new java.awt.Font("Tahoma", 0, 14));
+        jButton_Dodaj.setText("Dodaj");
+        jButton_Dodaj.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        jButton_Dodaj.setIconTextGap(0);
+        jButton_Dodaj.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent event) {
+                jButton_Dodaj_u_fakturu(event);
+            }
+        });
+        
+        jButton_Trazi = new javax.swing.JButton();
+        jButton_Trazi.setFont(new java.awt.Font("Tahoma", 0, 14));
+        jButton_Trazi.setText("Trazi");
+        jButton_Trazi.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        jButton_Trazi.setIconTextGap(0);
+        jButton_Trazi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent event) {
+                jButton_Trazi_akcijaTrazi(event);
+            }
+        });
+        
+        
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jButton1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/JAVA_VIDEOS_TUTORIALS/icons/first.png"))); // NOI18N
-        jButton1.setText("First");
+        //jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("ikone/pocetak.ico"))); // NOI18N/home/rnd/Documents/JAVA - Image/SimpleStereoC
+        jButton1.setText("PRVA |<");
         jButton1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         jButton1.setIconTextGap(0);
@@ -69,8 +188,9 @@ public class Images_From_Folder_Navigation extends javax.swing.JFrame {
         });
 
         jButton_Next.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jButton_Next.setIcon(new javax.swing.ImageIcon(getClass().getResource("/JAVA_VIDEOS_TUTORIALS/icons/next.png"))); // NOI18N
-        jButton_Next.setText("Next");
+        //jButton_Next.setIcon(new javax.swing.ImageIcon(getClass().getResource("/JAVA_VIDEOS_TUTORIALS/icons/next.png"))); // NOI18N
+        jButton_Next.setIcon(new javax.swing.ImageIcon("refresh.png"));
+        jButton_Next.setText("Naredna ->");
         jButton_Next.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jButton_Next.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         jButton_Next.setIconTextGap(0);
@@ -81,8 +201,8 @@ public class Images_From_Folder_Navigation extends javax.swing.JFrame {
         });
 
         jButton_Previous.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jButton_Previous.setIcon(new javax.swing.ImageIcon(getClass().getResource("/JAVA_VIDEOS_TUTORIALS/icons/previous.png"))); // NOI18N
-        jButton_Previous.setText("Previous");
+        //jButton_Previous.setIcon(new javax.swing.ImageIcon(getClass().getResource("/JAVA_VIDEOS_TUTORIALS/icons/previous.png"))); // NOI18N
+        jButton_Previous.setText("Prethodna <-");
         jButton_Previous.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jButton_Previous.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         jButton_Previous.setIconTextGap(0);
@@ -93,8 +213,8 @@ public class Images_From_Folder_Navigation extends javax.swing.JFrame {
         });
 
         jButton_Last.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jButton_Last.setIcon(new javax.swing.ImageIcon(getClass().getResource("/JAVA_VIDEOS_TUTORIALS/icons/last.png"))); // NOI18N
-        jButton_Last.setText("Last");
+        //jButton_Last.setIcon(new javax.swing.ImageIcon(getClass().getResource("/JAVA_VIDEOS_TUTORIALS/icons/last.png"))); // NOI18N
+        jButton_Last.setText("ZADNJA >|");
         jButton_Last.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jButton_Last.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         jButton_Last.setIconTextGap(0);
@@ -109,6 +229,30 @@ public class Images_From_Folder_Navigation extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel_Image, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            
+            .addGroup(layout.createSequentialGroup()
+            .addComponent(jLabel_Sifra, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGap(10,10,10)
+            .addComponent(jLabel_Sifra_sifra, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+            
+            .addComponent(jLabel_Cijena, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGap(10,10,10)
+            .addComponent(jLabel_Cijena_cijena, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+            
+            .addComponent(jLabel_Naziv, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGap(10,10,10)   
+            
+            .addComponent(jLabel_Naziv_naziv, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+            )
+            .addGroup(layout.createSequentialGroup()
+            .addComponent(trazi_sifru, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+            //.addGap(10, 10, 10)
+            .addComponent(jButton_Trazi, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jButton_Dodaj, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(dodaj_u_fakturu, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jLabel_dodaj_komada, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+            )
+            
             .addGroup(layout.createSequentialGroup()
                 .addGap(39, 39, 39)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -121,16 +265,40 @@ public class Images_From_Folder_Navigation extends javax.swing.JFrame {
                 .addContainerGap(71, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel_Image, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                
+                //najvazniji dio za alignment LABEL-a
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jLabel_Sifra, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel_Sifra_sifra, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel_Cijena, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel_Cijena_cijena, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel_Naziv, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel_Naziv_naziv, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                )
+                .addGap(18,18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    
+                    
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton_Next, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
                     .addComponent(jButton_Previous, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
-                    .addComponent(jButton_Last, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE))
-                .addGap(27, 27, 27))
+                    .addComponent(jButton_Last, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
+                    )
+                .addGap(7, 7, 7) 
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE) 
+                .addComponent(trazi_sifru, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButton_Trazi, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButton_Dodaj, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(dodaj_u_fakturu, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel_dodaj_komada, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                )
+                //.addGap(10 ,10,10) )
+                
+                )
+
         );
 
         pack();
@@ -138,6 +306,31 @@ public class Images_From_Folder_Navigation extends javax.swing.JFrame {
 
      // The First , Next , Previous ,Last Navigation Buttons
 
+    private void jButton_Dodaj_u_fakturu(java.awt.event.ActionEvent event) {
+        
+        
+    }
+     
+     
+    private void jButton_Trazi_akcijaTrazi(java.awt.event.ActionEvent event) {
+        try {
+            
+        String sifra_za_trazenje = trazi_sifru.getText();
+        System.out.println(sifra_za_trazenje);
+        
+        ImageIcon icon = new ImageIcon("/home/rnd/Documents/slike/" + sifra_za_trazenje + ".jpg");
+        Image image = icon.getImage().getScaledInstance(jLabel_Image.getWidth(), jLabel_Image.getHeight(), Image.SCALE_SMOOTH);
+        jLabel_Image.setIcon(new ImageIcon(image));
+        
+        
+        
+        
+    } catch (Exception b)  { 
+        System.out.println("Nesto nije ok " + b);
+    }
+        
+        
+    }
     // First
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
         
@@ -213,5 +406,20 @@ public class Images_From_Folder_Navigation extends javax.swing.JFrame {
     private javax.swing.JButton jButton_Next;
     private javax.swing.JButton jButton_Previous;
     private javax.swing.JLabel jLabel_Image;
+    
+    private javax.swing.JLabel jLabel_Sifra;
+    private javax.swing.JLabel jLabel_Cijena;
+    private javax.swing.JLabel jLabel_Naziv_naziv;
+    
+    private javax.swing.JLabel jLabel_Sifra_sifra;
+    private javax.swing.JLabel jLabel_Cijena_cijena;
+    private javax.swing.JLabel jLabel_Naziv;
+    
+    private javax.swing.JTextField trazi_sifru;
+    private javax.swing.JButton jButton_Trazi;
+    
+    private javax.swing.JButton jButton_Dodaj;
+    private javax.swing.JTextField dodaj_u_fakturu;
+    private javax.swing.JLabel  jLabel_dodaj_komada;
     // End of variables declaration                   
 }
